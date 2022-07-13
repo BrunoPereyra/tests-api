@@ -10,8 +10,6 @@ const makeComments = async (req, ress) => {
         if (!Story) {
            return  ress.status(404).send({ ress: "story no existe" });
         }
-    } else {
-        return ress.status(400).send({ ress: "idStory in not string or > 24 " });
     }
 
     if (typeof comments !== "string") {
@@ -21,7 +19,7 @@ const makeComments = async (req, ress) => {
     }
 
     const Comment = new Comments({
-        comments,
+        comment:comments,
         user: idUser
     })
     try {

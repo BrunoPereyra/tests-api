@@ -21,10 +21,13 @@ app.use(cors())
 
 app.use("/signup", require("./routers/signup.routes"))
 app.use("/login", require("./routers/login.routes"))
-app.use("/designProfile",require("./routers/designProfile.routes"))
 app.use("/makeStories",useExtractor,require("./routers/makestories.routes"))
 app.use("/getStories",useExtractor,require("./routers/getStories.routes"))
 app.use("/makeComments",useExtractor,require("./routers/comment.routes"))
+app.use("/makeCommentsRep",useExtractor,require("./routers/commentRep.routes"))
+app.use("/getCommentsRep",useExtractor,require("./routers/getCommentRep.routes"))
+app.use("/getStoriesComments",useExtractor,require("./routers/getStoriesComments.routes"))
+
 app.use(notFound)
 app.use(handleErrors)
 

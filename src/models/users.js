@@ -2,22 +2,20 @@ const { Schema, model } = require("mongoose")
 
 const UserSchema = new Schema({
     nameUser: String,
+    avatar:String,
     fullName: String,
     Gmail: String,
     passwordHash: String,
-    profileStyle: [
-        { title: String },
-        { Bcolor: String }
-    ],
     followers: Array,
-    storys:[{
-        type:Schema.Types.ObjectId,
-        ref:"storys"
+    Following: Array,
+    storys: [{
+        type: Schema.Types.ObjectId,
+        ref: "storys"
     }]
 })
 // UserSchema.set("toJSON", {
 //     transform: (document, returnedObject) => {
-        
+
 //     }
 // })
 

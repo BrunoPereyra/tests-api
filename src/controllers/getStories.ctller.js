@@ -1,10 +1,11 @@
 const Storys = require("../models/Story")
 
 const getStories = async (req, ress) => {
-    const Story = await Storys.find({}).populate("user",{
+    const Story = await Storys.find((search)=>{
+        console.log(search);
+    }).populate("user",{
         nameUser:1,
         _id:0
     })
-    ress.json({Story})
 }
 module.exports = getStories

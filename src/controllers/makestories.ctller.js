@@ -13,7 +13,8 @@ const makeStories = async (req, ress) => {
         title: String,
         descriptionStory: String,
         story: String,
-        user: idUser
+        user: idUser,
+        date: new Date(),
     })
     try {
         const saveStory = await Story.save()

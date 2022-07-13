@@ -5,6 +5,8 @@ const StorySchcema = new Schema({
     descriptionStory: String,
     story: String,
     likes:Number,
+    date: Date,
+    img:String,
     user: [{
         type:Schema.Types.ObjectId,
         ref:"users"

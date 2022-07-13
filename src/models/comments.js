@@ -7,7 +7,10 @@ const CommentsSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "users"
     }],
-    commentReplies: Array
+    commentReplies: [{
+        type: Schema.Types.ObjectId,
+        ref: "commentReplies"
+    }],
 })
 
 const comments = model("comments", CommentsSchema)
