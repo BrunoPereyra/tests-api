@@ -8,6 +8,7 @@ const UserSchema = new Schema({
     passwordHash: String,
     followers: Array,
     Following: Array,
+    date: Date,
     storys: [{
         type: Schema.Types.ObjectId,
         ref: "storys"

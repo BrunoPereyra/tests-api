@@ -20,7 +20,8 @@ const Signup = async (req, ress) => {
     const user = await new Users({
         nameUser,
         fullName,
-        passwordHash
+        passwordHash,
+        date: new Date(),
     })
     await user.save()
     ress.status(200).json({

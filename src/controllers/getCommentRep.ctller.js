@@ -7,12 +7,14 @@ const getCommentsRep = async (req, ress) => {
         for (let i = 0; i < idComment.length; i++) {
             let idCommentsFor = idComment[i];
             var dtComments = await Comments.findById(idCommentsFor)
+                .sort({ date: -1 })
                 .populate("commentReplies", {
                     _id: 0
                 })
                 .populate("user", {
                     _id: 0
                 })
+
             arrayComments.push(dtComments)
 
         }
@@ -21,7 +23,7 @@ const getCommentsRep = async (req, ress) => {
         })
     } catch (error) {
         ress.status(400).send({
-            ress: "404"
+            ress: "get data faild"
         })
     }
 }

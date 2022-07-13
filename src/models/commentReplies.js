@@ -4,6 +4,7 @@ const commentRepliesSchema = new Schema({
     comment: String,
     likes: String,
     user: Object,
+    date: Date,
 })
 
 const commentReplies = model("commentReplies", commentRepliesSchema)

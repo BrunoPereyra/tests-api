@@ -22,6 +22,7 @@ const commentRepliesctllr = async (req, ress) => {
     const user = await users.findById(idUser)
     const commentReplie = new commentReplies({
         comment,
+        date: new Date(),
         user: {
             nameUser: user.nameUser,
             avatar: user.avatar

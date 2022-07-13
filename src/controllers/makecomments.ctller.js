@@ -5,7 +5,10 @@ const makeComments = async (req, ress) => {
     const { idUser } = req
     const { comments, idStory } = req.body;
     let Story
-    if (idStory.length == 24 && typeof idStory == "string") {
+    if(!idStory){
+        return ress.status(404).send({ ress: "missing data" });
+    }
+    else if (idStory.length == 24 && typeof idStory == "string") {
         Story = await Storys.findById(idStory);
         if (!Story) {
            return  ress.status(404).send({ ress: "story no existe" });
@@ -20,14 +23,15 @@ const makeComments = async (req, ress) => {
 
     const Comment = new Comments({
         comment:comments,
-        user: idUser
+        user: idUser,
+        date: new Date(),
     })
     try {
         await Comment.save()
         Story.comments = await Story.comments.concat(Comment._id)
         await Story.save()
-        return ress.status(204).send({
-            ress: "comments save"
+        return ress.status(200).send({
+            ress: Comment
         })
     } catch {
         return ress.status(400).send("error")

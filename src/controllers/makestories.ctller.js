@@ -2,17 +2,18 @@ const Storys = require("../models/Story")
 const Users = require("../models/users")
 
 const makeStories = async (req, ress) => {
-    const { title, descriptionStory, story } = req.body
+    const { title, descriptionStory, story, imgStory } = req.body
     const { idUser } = req
-    if (!title || !descriptionStory || !story) {
+    if (!title || !descriptionStory || !story || !imgStory) {
         return ress.status(400).json({
             ress: "missing data"
         })
     }
     const Story = new Storys({
-        title: String,
-        descriptionStory: String,
-        story: String,
+        title: title,
+        descriptionStory: descriptionStory,
+        story: story,
+        imgStory: imgStory,
         user: idUser,
         date: new Date(),
     })
