@@ -4,6 +4,11 @@ const Users = require("../models/users")
 
 const Login = async (req, ress) => {
     const { password, nameUser } = req.body
+    if (password == undefined || nameUser == undefined ) {
+        return ress.status(400).send({
+            ress:"missing data"
+        })
+    }
     const user = await Users.findOne({ nameUser })
     if (!user || password == null ||typeof password !== "string" ) {
         ress.status(404).json({

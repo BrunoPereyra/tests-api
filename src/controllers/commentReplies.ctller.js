@@ -6,15 +6,15 @@ const commentRepliesctllr = async (req, ress) => {
 
     const { idUser } = req
     const { comment, idComment } = req.body;
-    let Comment
-    if (idComment.length == 24 && typeof idComment == "string") {
-        Comment = await Comments.findById(idComment);
-        if (!Comment) {
-            return ress.status(404).send({ ress: "comment no existe" });
+    console.log(idComment);
+    if (comment !== undefined || idComment !== undefined) {
+        if (idComment.length == 24 && typeof idComment == "string" && typeof comment == "string") {
+            Comment = await Comments.findById(idComment);
+            if (!Comment) {
+                return ress.status(404).send({ ress: "comment no existe" });
+            }
         }
-    }
-
-    if (typeof comment !== "string") {
+    } else {
         return ress.status(400).send({
             ress: "faild data"
         })
@@ -35,8 +35,8 @@ const commentRepliesctllr = async (req, ress) => {
         ress.status(200).send({
             ress: "comments replie save"
         })
-    } catch(err) {
-        return ress.status(400).send("error")
+    } catch (err) {
+        return ress.status(400).send({ress:"error"})
     }
 };
 module.exports = commentRepliesctllr;

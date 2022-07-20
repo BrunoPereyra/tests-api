@@ -27,6 +27,8 @@ app.use("/makeComments",useExtractor,require("./routers/comment.routes"))
 app.use("/makeCommentsRep",useExtractor,require("./routers/commentRep.routes"))
 app.use("/getCommentsRep",useExtractor,require("./routers/getCommentRep.routes"))
 app.use("/getStoriesComments",useExtractor,require("./routers/getStoriesComments.routes"))
+app.use("/following",useExtractor,require("./routers/following.routes"))
+app.use("/saveStory",useExtractor,require("./routers/saveStories.routes"))
 
 app.use(notFound)
 app.use(handleErrors)

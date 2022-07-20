@@ -5,13 +5,13 @@ const makeComments = async (req, ress) => {
     const { idUser } = req
     const { comments, idStory } = req.body;
     let Story
-    if(!idStory){
+    if (idStory == undefined || comments == undefined) {
         return ress.status(404).send({ ress: "missing data" });
     }
     else if (idStory.length == 24 && typeof idStory == "string") {
         Story = await Storys.findById(idStory);
         if (!Story) {
-           return  ress.status(404).send({ ress: "story no existe" });
+            return ress.status(404).send({ ress: "story no existe" });
         }
     }
 
@@ -22,7 +22,7 @@ const makeComments = async (req, ress) => {
     }
 
     const Comment = new Comments({
-        comment:comments,
+        comment: comments,
         user: idUser,
         date: new Date(),
     })

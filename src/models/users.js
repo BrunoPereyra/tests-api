@@ -6,9 +6,10 @@ const UserSchema = new Schema({
     fullName: String,
     Gmail: String,
     passwordHash: String,
-    followers: Array,
-    Following: Array,
+    followers: [],
+    following: [],
     date: Date,
+    saveStorys:[],
     storys: [{
         type: Schema.Types.ObjectId,
         ref: "storys"

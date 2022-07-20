@@ -6,6 +6,7 @@ const StorySchcema = new Schema({
     story: String,
     likes:Number,
     date: Date,
+    theme:String,
     img:String,
     user: [{
         type:Schema.Types.ObjectId,
