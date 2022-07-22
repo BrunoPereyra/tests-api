@@ -6,20 +6,19 @@ const following = async (req, ress) => {
     const user = await users.findById(iduser)
 
     let userf = {}
-    if (iduser !== undefined) {
-        if (idUserF.length == 24 && typeof idUserF == "string") {
-            userf = await users.findById(idUserF)
-            if (!userf) {
-                return ress.status(404).json({
-                    ress: "user no encontrado"
-                })
-            }
+    if (idUserF.length == 24 && typeof idUserF == "string") {
+        userf = await users.findById(idUserF)
+        if (!userf) {
+            return ress.status(404).json({
+                ress: "user no encontrado"
+            })
         }
     } else {
         return ress.status(404).json({
             ress: "missing data"
         })
     }
+    
     if (!user) {
         return ress.status(404).json({
             ress: "user no encontrado"
@@ -29,7 +28,6 @@ const following = async (req, ress) => {
 
 
     let following = await user.following.find(e => e == idUserF)
-    console.log(following);
     if (!following && !(iduser == idUserF)) {
         user.following = await user.following.concat(idUserF)
         userf.followers = await userf.followers.concat(user._id)
