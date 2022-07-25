@@ -3,6 +3,7 @@ const users = require("../models/users");
 
 
 const getStories = async (req, ress) => {
+    // Solo me agarra el prinero
 
     let { limit, theme, following, idStory } = req.body;
     const { idUser } = req;
@@ -12,6 +13,9 @@ const getStories = async (req, ress) => {
     }
     if (following !== true) {
         following = false
+    }
+    if (theme === undefined) {
+        theme = []
     }
 
     if (idStory) {
@@ -27,17 +31,37 @@ const getStories = async (req, ress) => {
                 ress: "historia no encontrada o mal id",
             });
         }
-    } else if (theme == undefined && following !== true) {
+    } else if (theme[0] == undefined && following !== true) {
         const story = await Storys.find({}).sort({ date: -1 }).limit(limit);
         return ress.status(202).json({
             ress: story,
         });
 
-    } else if (theme && following !== true) {
-        if (theme == "misterio" || theme == "extraterrestre" || theme == "fantasmas") {
-            const story = await Storys.find({ theme: theme })
-                .sort({ date: -1 })
-                .limit(limit);
+    } else if (theme[0] !== undefined && following !== true) {
+        for (let i = 0; i < theme.length; i++) {
+            const e = theme[i];
+            if (e !== "terror" && e !== "misterio" && e !== "fantasmas") {
+                const story = await Storys.find({}).sort({ date: -1 }).limit(limit);
+                return ress.status(202).json({
+                    ress: story,
+                });
+            }
+        }
+        let iTheme = theme.length
+        if (iTheme == 1) {
+            let story = await Storys.find({ theme: theme[0] }).sort({ date: -1 }).limit(limit);
+
+            return ress.status(202).json({
+                ress: story,
+            });
+        } else if (iTheme == 2) {
+            let story = await Storys.find({ theme: theme[0], theme: theme[1] }).sort({ date: -1 }).limit(limit);
+            return ress.status(202).json({
+                ress: story,
+            });
+
+        } else if (iTheme == 3) {
+            let story = await Storys.find({ theme: theme[0], theme: theme[1], theme: theme[2] }).sort({ date: -1 }).limit(limit);
             return ress.status(202).json({
                 ress: story,
             });
@@ -49,7 +73,7 @@ const getStories = async (req, ress) => {
 
         }
 
-    } else if (following === true && theme == undefined) {
+    } else if (following === true && theme[0] == undefined) {
 
         const user = await users.findById(idUser);
         const followingU = await user.following;
@@ -65,20 +89,105 @@ const getStories = async (req, ress) => {
             for (let i = 0; i < followingU.length; i++) {
                 let idUserF = followingU[i]
                 let userf = await users.findById(idUserF)
-                    .populate("storys", {
-                        _id: 0
-                    })
-
+                    .populate("storys", {}, null, { sort: { date: -1 } })
                 followingUser.push(userf)
             }
-            console.log(followingUser, "aa");
 
             return ress.status(202).json({
                 ress: followingUser,
             });
         }
 
-    } else {
+    } else if (following === true && theme[0] !== undefined) {
+        const user = await users.findById(idUser);
+        const followingU = await user.following;
+
+        for (let i = 0; i < theme.length; i++) {
+            const e = theme[i];
+            if (e !== "terror" && e !== "misterio" && e !== "fantasmas") {
+                followingUser = []
+                for (let i = 0; i < followingU.length; i++) {
+                    let idUserF = followingU[i]
+                    let userf = await users.findById(idUserF)
+                        .populate({
+                            path: "storys",
+                            select: {},
+                            match: {},
+                            options: { limit: 20, sort: { date: -1 } },
+                        })
+                    followingUser.push(userf)
+                }
+                return ress.status(202).json({
+                    ress: followingUser,
+                });
+            }
+        }
+
+        if (followingU[0] == undefined) {
+            let iTheme = theme.length
+            if (iTheme == 1) {
+                let story = await Storys.find({ theme: theme[0] }).sort({ date: -1 }).limit(limit);
+                return ress.status(202).json({
+                    ress: story,
+                });
+            } else if (iTheme == 2) {
+                let story = await Storys.find({ theme: theme[0], theme: theme[1] }).sort({ date: -1 }).limit(limit);
+                return ress.status(202).json({
+                    ress: story,
+                });
+            } else if (iTheme == 3) {
+                let story = await Storys.find({ theme: theme[0], theme: theme[1], theme: theme[2] }).sort({ date: -1 }).limit(limit);
+                return ress.status(202).json({
+                    ress: story,
+                });
+            }
+
+        } else if (followingU) {
+            followingUser = []
+            let iTheme = theme.length
+            for (let i = 0; i < followingU.length; i++) {
+
+                let idUserF = followingU[i]
+
+                if (iTheme == 1) {
+                    let userf = await users.findById(idUserF)
+                        .populate({
+                            path: "storys",
+                            select: {},
+                            match: { theme: theme[0] },
+                            options: { limit: 20, sort: { date: -1 } },
+                        })
+
+                    followingUser.push(userf)
+                } else if (iTheme == 2) {
+                    let userf = await users.findById(idUserF)
+                        .populate({
+                            path: "storys",
+                            select: {},
+                            match: { theme: theme[0], theme: theme[1] },
+                            options: { limit: 20, sort: { date: -1 } },
+                        })
+
+                    followingUser.push(userf)
+                } else if (iTheme == 3) {
+                    let userf = await users.findById(idUserF)
+                        .populate({
+                            path: "storys",
+                            select: {},
+                            match: { theme: theme[0], theme: theme[1], theme: theme[2] },
+                            options: { limit: 20, sort: { date: -1 } },
+                        })
+
+                    followingUser.push(userf)
+                }
+            }
+
+            return ress.status(202).json({
+                ress: followingUser,
+            });
+        }
+    }
+    else {
         return ress.status(400).json({
             ress: "error",
         });
