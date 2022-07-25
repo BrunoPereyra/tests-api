@@ -18,6 +18,7 @@ const getStories = async (req, ress) => {
         theme = []
     }
 
+
     if (idStory) {
         if (idStory.length == 24 && typeof idStory == "string") {
             const story = await Storys.findById(idStory).populate("user", {
@@ -31,50 +32,78 @@ const getStories = async (req, ress) => {
                 ress: "historia no encontrada o mal id",
             });
         }
+
+
+
     } else if (theme[0] == undefined && following !== true) {
         const story = await Storys.find({}).sort({ date: -1 }).limit(limit);
         return ress.status(202).json({
             ress: story,
         });
 
+
+
     } else if (theme[0] !== undefined && following !== true) {
         for (let i = 0; i < theme.length; i++) {
             const e = theme[i];
             if (e !== "terror" && e !== "misterio" && e !== "fantasmas") {
                 const story = await Storys.find({}).sort({ date: -1 }).limit(limit);
+
                 return ress.status(202).json({
                     ress: story,
                 });
             }
         }
+
         let iTheme = theme.length
         if (iTheme == 1) {
-            let story = await Storys.find({ theme: theme[0] }).sort({ date: -1 }).limit(limit);
+            let story = await Storys.find({
+                $or: [
+                    { theme: theme[0] }
+                ]
+            }).sort({ date: -1 }).limit(limit);
 
             return ress.status(202).json({
                 ress: story,
             });
+
         } else if (iTheme == 2) {
-            let story = await Storys.find({ theme: theme[0], theme: theme[1] }).sort({ date: -1 }).limit(limit);
+            let story = await Storys.find({
+                $or: [
+                    { theme: theme[0] },
+                    { theme: theme[1] }
+                ]
+
+            }).sort({ date: -1 }).limit(limit);
+
             return ress.status(202).json({
                 ress: story,
             });
 
         } else if (iTheme == 3) {
-            let story = await Storys.find({ theme: theme[0], theme: theme[1], theme: theme[2] }).sort({ date: -1 }).limit(limit);
+            let story = await Storys.find({
+                $or: [
+                    { theme: theme[0] },
+                    { theme: theme[1] },
+                    { theme: theme[2] },
+                ]
+            }).sort({ date: -1 }).limit(limit);
+
             return ress.status(202).json({
                 ress: story,
             });
         } else {
             const story = await Storys.find({}).sort({ date: -1 }).limit(limit);
+
             return ress.status(202).json({
                 ress: story,
             });
 
         }
 
-    } else if (following === true && theme[0] == undefined) {
 
+
+    } else if (following === true && theme[0] == undefined) {
         const user = await users.findById(idUser);
         const followingU = await user.following;
         if (followingU[0] == undefined) {
@@ -97,6 +126,8 @@ const getStories = async (req, ress) => {
                 ress: followingUser,
             });
         }
+
+
 
     } else if (following === true && theme[0] !== undefined) {
         const user = await users.findById(idUser);
@@ -126,17 +157,36 @@ const getStories = async (req, ress) => {
         if (followingU[0] == undefined) {
             let iTheme = theme.length
             if (iTheme == 1) {
-                let story = await Storys.find({ theme: theme[0] }).sort({ date: -1 }).limit(limit);
+                let story = await Storys.find({
+                    $or: [
+                        { theme: theme[0] },
+                    ]
+                }).sort({ date: -1 }).limit(limit);
+
                 return ress.status(202).json({
                     ress: story,
                 });
             } else if (iTheme == 2) {
-                let story = await Storys.find({ theme: theme[0], theme: theme[1] }).sort({ date: -1 }).limit(limit);
+                
+                let story = await Storys.find({
+                    $or: [
+                        { theme: theme[0] },
+                        { theme: theme[1] },
+                    ]
+                }).sort({ date: -1 }).limit(limit);
                 return ress.status(202).json({
                     ress: story,
                 });
+
             } else if (iTheme == 3) {
-                let story = await Storys.find({ theme: theme[0], theme: theme[1], theme: theme[2] }).sort({ date: -1 }).limit(limit);
+                let story = await Storys.find({
+                    $or: [
+                        { theme: theme[0] },
+                        { theme: theme[1] },
+                        { theme: theme[2] },
+                    ]
+
+                }).sort({ date: -1 }).limit(limit);
                 return ress.status(202).json({
                     ress: story,
                 });
@@ -154,7 +204,11 @@ const getStories = async (req, ress) => {
                         .populate({
                             path: "storys",
                             select: {},
-                            match: { theme: theme[0] },
+                            match: {
+                                $or: [
+                                    { theme: theme[0] }
+                                ]
+                            },
                             options: { limit: 20, sort: { date: -1 } },
                         })
 
@@ -164,7 +218,12 @@ const getStories = async (req, ress) => {
                         .populate({
                             path: "storys",
                             select: {},
-                            match: { theme: theme[0], theme: theme[1] },
+                            match: {
+                                $or: [
+                                    { theme: theme[0] },
+                                    { theme: theme[1] },
+                                ]
+                            },
                             options: { limit: 20, sort: { date: -1 } },
                         })
 
@@ -174,7 +233,13 @@ const getStories = async (req, ress) => {
                         .populate({
                             path: "storys",
                             select: {},
-                            match: { theme: theme[0], theme: theme[1], theme: theme[2] },
+                            match: {
+                                $or: [
+                                    { theme: theme[0] },
+                                    { theme: theme[1] },
+                                    { theme: theme[2] },
+                                ]
+                            },
                             options: { limit: 20, sort: { date: -1 } },
                         })
 
