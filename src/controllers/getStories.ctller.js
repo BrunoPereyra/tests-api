@@ -3,7 +3,6 @@ const users = require("../models/users");
 
 
 const getStories = async (req, ress) => {
-    // Solo me agarra el prinero
 
     let { limit, theme, following, idStory } = req.body;
     const { idUser } = req;
