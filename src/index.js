@@ -28,6 +28,8 @@ app.use("/getCommentsRep",useExtractor,require("./routers/getCommentRep.routes")
 app.use("/getStoriesComments",useExtractor,require("./routers/getStoriesComments.routes"))
 app.use("/following",useExtractor,require("./routers/following.routes"))
 app.use("/saveStory",useExtractor,require("./routers/saveStories.routes"))
+app.use("/deletes",useExtractor,require("./routers/deletes.routes"))
+
 
 app.use(notFound)
 app.use(handleErrors)

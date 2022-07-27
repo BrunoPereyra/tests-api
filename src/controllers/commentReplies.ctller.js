@@ -6,8 +6,8 @@ const commentRepliesctllr = async (req, ress) => {
 
     const { idUser } = req
     const { comment, idComment } = req.body;
-    console.log(idComment);
-    if (comment !== undefined || idComment !== undefined) {
+   
+    if (comment !== undefined && idComment !== undefined) {
         if (idComment.length == 24 && typeof idComment == "string" && typeof comment == "string") {
             Comment = await Comments.findById(idComment);
             if (!Comment) {
