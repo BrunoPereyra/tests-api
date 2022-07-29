@@ -6,6 +6,11 @@ const saveStories = async (req, ress) => {
     const { saveId } = req.body
     const user = await users.findById(iduser)
 
+    if (user == null) {
+        return ress.status(404).json({
+            ress: "user no encontrado"
+        })
+    }
     let storyS = {}
     if (saveId.length == 24 && typeof saveId == "string") {
         storyS = await Story.findById(saveId)

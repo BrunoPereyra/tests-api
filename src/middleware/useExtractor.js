@@ -18,6 +18,4 @@ module.exports = async (req, res, next) => {
         return res.status(401).json({ error: 'token missing or invalid' })
         next()
     }
-
-
 }

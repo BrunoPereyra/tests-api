@@ -3,9 +3,9 @@ const Storys = require("../models/Story");
 
 const makeComments = async (req, ress) => {
     const { idUser } = req
-    const { comments, idStory } = req.body;
+    const { comment, idStory } = req.body;
     let Story
-    if (idStory == undefined || comments == undefined) {
+    if (idStory == undefined || comment == undefined) {
         return ress.status(404).send({ ress: "missing data" });
     }
     else if (idStory.length == 24 && typeof idStory == "string") {
@@ -15,14 +15,14 @@ const makeComments = async (req, ress) => {
         }
     }
 
-    if (typeof comments !== "string") {
+    if (typeof comment !== "string") {
         return ress.status(400).send({
             ress: "faild data"
         })
     }
 
     const Comment = new Comments({
-        comment: comments,
+        comment,
         user: idUser,
         date: new Date(),
     })

@@ -1,4 +1,5 @@
 const Comments = require("../models/comments");
+const commentReplies = require("../models/commentReplies")
 const Storys = require("../models/Story");
 const Users = require("../models/users")
 
@@ -6,31 +7,49 @@ const deletes = async (req, ress) => {
     const { idUser } = req;
     const { comments, idStory } = req.body;
 
+
     if (idStory.length == 24 && typeof idStory == "string") {
-        let Story = await Storys.findById(idStory);
-        // console.log(Story);
-        if (Story) {
 
-            let user = await Users.findById(idUser)
-            const userD = await user.storys.indexOf(idStory)
-            // await user.storys.splice(userD, 1)
-            // await user.save()
+        let Story = await Storys.findById(idStory)
+        if (Story.user == idUser) {
 
-            let Cstories = await Storys.find({user:idUser})
-            let commentRep = await Cstories.id
-            console.log(Cstories);
-            // await Comments.findById(idUser).deleteOne({})
+            if (Story) {
+                let user = await Users.findById(idUser)
+                const userD = await user.storys.indexOf(idStory)
+
+                await user.storys.splice(userD, 1)
+                await user.save()
 
 
-            // await Story.deleteOne({ _id: idUser });
-            // Story.save()
+                let Cstories = await Story.comments
+                if (Cstories) {
+                    for (let i = 0; i < Cstories.length; i++) {
+                        const C = Cstories[i];
+                        let Dcomments = await Comments.findById(C).populate("commentReplies")
+                        let CRstories = []
+                        if (Dcomments.commentReplies) {
+                            CRstories = await Dcomments.commentReplies
+                            for (let i = 0; i < CRstories.length; i++) {
+                                const e = CRstories[i];
+                                await commentReplies.deleteOne({ _id: e })
+                            }
+                        }
+                        await Comments.deleteOne({ _id: C })
+                    }
 
-            return ress.status(202).send({ ress: "story delete" });
+                }
+
+                await Story.deleteOne({ _id: idUser });
+
+                return ress.status(202).send({ ress: "story delete" });
+            } else {
+
+                return ress.status(404).send({ ress: "historia no existe o no autorizado" });
+            }
         } else {
-
-            return ress.status(404).send({ ress: "historia no existe o no autorizado" });
+            return ress.status(404).send({ ress: "no autorizado" });
         }
-    } else if (comments.length == 24 && typeof comments == "string") {
+    } else if (comments !== undefined && comments.length == 24 && typeof comments == "string") {
         let comment = await Comments.findById(idStory);
         if (!comment) {
 

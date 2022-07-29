@@ -5,8 +5,9 @@ const makeStories = async (req, ress) => {
     const { title, descriptionStory, story, imgStory, theme } = req.body
     const { idUser } = req
     if (!title || !descriptionStory || !story || !imgStory ||
-        (theme === ("misterio" || "extraterrestre" || "fantasmas")
-        )) {
+        (theme == "misterio" || theme == "extraterrestre" || theme == "fantasmas"
+        ) == false
+        ) {
         return ress.status(400).json({
             ress: "missing data"
         })

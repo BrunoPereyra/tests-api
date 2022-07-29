@@ -104,7 +104,13 @@ const getStories = async (req, ress) => {
 
     } else if (following === true && theme[0] == undefined) {
         const user = await users.findById(idUser);
+        if (user == null) {
+            return ress.status(202).json({
+                ress: "usuario no existe",
+            });
+        }
         const followingU = await user.following;
+
         if (followingU[0] == undefined) {
             const story = await Storys.find({}).sort({ date: -1 }).limit(limit);
             return ress.status(202).json({
@@ -166,7 +172,7 @@ const getStories = async (req, ress) => {
                     ress: story,
                 });
             } else if (iTheme == 2) {
-                
+
                 let story = await Storys.find({
                     $or: [
                         { theme: theme[0] },

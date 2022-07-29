@@ -13,6 +13,10 @@ const commentRepliesctllr = async (req, ress) => {
             if (!Comment) {
                 return ress.status(404).send({ ress: "comment no existe" });
             }
+        } else {
+            return ress.status(400).send({
+                ress: "id malformado"
+            })
         }
     } else {
         return ress.status(400).send({
@@ -20,6 +24,11 @@ const commentRepliesctllr = async (req, ress) => {
         })
     }
     const user = await users.findById(idUser)
+    if (!user) {
+        return ress.status(400).send({
+            ress: "user no existe"
+        })
+    }
     const commentReplie = new commentReplies({
         comment,
         date: new Date(),
