@@ -7,14 +7,21 @@ const deletes = async (req, ress) => {
     const { idUser } = req;
     const { comments, idStory } = req.body;
 
+    let user = await Users.findById(idUser)
+    if (user == null) {
+        return ress.status(404).send({ ress: "user no existe" })
+    }
 
-    if (idStory.length == 24 && typeof idStory == "string") {
-
+    if (typeof idStory == "string" && idStory.length == 24) {
         let Story = await Storys.findById(idStory)
+        if (Story == null) {
+            return ress.status(404).json({
+                ress: "story no existe"
+            })
+        }
         if (Story.user == idUser) {
 
             if (Story) {
-                let user = await Users.findById(idUser)
                 const userD = await user.storys.indexOf(idStory)
 
                 await user.storys.splice(userD, 1)
@@ -49,7 +56,7 @@ const deletes = async (req, ress) => {
         } else {
             return ress.status(404).send({ ress: "no autorizado" });
         }
-    } else if (comments !== undefined && comments.length == 24 && typeof comments == "string") {
+    } else if (typeof comments == "string" && comments.length == 24) {
         let comment = await Comments.findById(idStory);
         if (!comment) {
 

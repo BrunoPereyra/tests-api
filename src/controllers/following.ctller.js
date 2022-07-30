@@ -4,7 +4,9 @@ const following = async (req, ress) => {
     const { idUserF } = req.body
     const iduser = req.idUser
     const user = await users.findById(iduser)
-
+    if (user == null) {
+        return ress.status(404).send({ ress: "user no existe" })
+    }
     let userf = {}
     if (idUserF.length == 24 && typeof idUserF == "string") {
         userf = await users.findById(idUserF)
@@ -18,7 +20,7 @@ const following = async (req, ress) => {
             ress: "missing data"
         })
     }
-    
+
     if (!user) {
         return ress.status(404).json({
             ress: "user no encontrado"

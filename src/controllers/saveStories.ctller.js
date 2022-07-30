@@ -8,7 +8,7 @@ const saveStories = async (req, ress) => {
 
     if (user == null) {
         return ress.status(404).json({
-            ress: "user no encontrado"
+            ress: "user no existe"
         })
     }
     let storyS = {}

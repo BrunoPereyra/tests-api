@@ -3,10 +3,14 @@ const users = require("../models/users");
 
 
 const getStories = async (req, ress) => {
+    const { idUser } = req
+    
+    const user = await users.findById(idUser)
+    if (user == null) {
+        return ress.status(404).send({ ress: "user no existe" })
+    }
 
     let { limit, theme, following, idStory } = req.body;
-    const { idUser } = req;
-
     if (limit == undefined) {
         limit = 20;
     }
@@ -20,9 +24,13 @@ const getStories = async (req, ress) => {
 
     if (idStory) {
         if (idStory.length == 24 && typeof idStory == "string") {
-            const story = await Storys.findById(idStory).populate("user", {
-                _id: 0
+            const story = await Storys.findById(idStory).populate({
+                path: "user",
+                select: {},
+                match: {},
+                options: {},
             })
+            console.log(story);
             return ress.status(202).json({
                 ress: story,
             });
@@ -103,12 +111,6 @@ const getStories = async (req, ress) => {
 
 
     } else if (following === true && theme[0] == undefined) {
-        const user = await users.findById(idUser);
-        if (user == null) {
-            return ress.status(202).json({
-                ress: "usuario no existe",
-            });
-        }
         const followingU = await user.following;
 
         if (followingU[0] == undefined) {
@@ -135,7 +137,6 @@ const getStories = async (req, ress) => {
 
 
     } else if (following === true && theme[0] !== undefined) {
-        const user = await users.findById(idUser);
         const followingU = await user.following;
 
         for (let i = 0; i < theme.length; i++) {

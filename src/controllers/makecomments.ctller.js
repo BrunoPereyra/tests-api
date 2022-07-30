@@ -1,13 +1,21 @@
 const Comments = require("../models/comments");
 const Storys = require("../models/Story");
+const users = require("../models/users")
 
 const makeComments = async (req, ress) => {
     const { idUser } = req
     const { comment, idStory } = req.body;
+
+    const user = await users.findById(idUser)
+    if (user == null) {
+        return ress.status(404).send({ ress: "user no existe" })
+    }
+
     let Story
     if (idStory == undefined || comment == undefined) {
         return ress.status(404).send({ ress: "missing data" });
     }
+
     else if (idStory.length == 24 && typeof idStory == "string") {
         Story = await Storys.findById(idStory);
         if (!Story) {
