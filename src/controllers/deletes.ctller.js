@@ -5,7 +5,7 @@ const Users = require("../models/users")
 
 const deletes = async (req, ress) => {
     const { idUser } = req;
-    const { comments, idStory } = req.body;
+    const { Idcomment, idStory } = req.body;
 
     let user = await Users.findById(idUser)
     if (user == null) {
@@ -56,14 +56,36 @@ const deletes = async (req, ress) => {
         } else {
             return ress.status(404).send({ ress: "no autorizado" });
         }
-    } else if (typeof comments == "string" && comments.length == 24) {
-        let comment = await Comments.findById(idStory);
-        if (!comment) {
+    } else if (typeof Idcomment == "string" && Idcomment.length == 24) {
 
-            return ress.status(202).send({ ress: "comments no existe" });
+
+        let comment = await Comments.findById(Idcomment)
+            .populate("user", { _id: 1 })
+            .populate({
+                path: "commentReplies",
+                select: {},
+                match: {},
+                options: {},
+            })
+        if (comment) {
+            if (JSON.stringify(comment.user[0]._id) == JSON.stringify(user._id)) {
+
+                if (comment.commentReplies) {
+
+                    let CRstories = await comment.commentReplies
+                    for (let i = 0; i < CRstories.length; i++) {
+                        const e = CRstories[i]._id
+                        await commentReplies.deleteOne({ _id: e })
+                    }
+                }
+                let Dcomment = comment._id
+                await Comments.deleteOne({ _id: Dcomment })
+                return ress.status(202).send({ ress: "delete comment" })
+            } else {
+                return ress.status(202).send({ ress: "no autorizado" });
+            }
         } else {
-
-            return ress.status(404).send({ ress: "comentario no existe  no autorizado" });
+            return ress.status(404).send({ ress: "comentario no existe" });
         }
     } else {
         return ress.status(404).send({ ress: "missing data" });
