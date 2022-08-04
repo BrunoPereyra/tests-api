@@ -34,6 +34,7 @@ app.use("/deletes", useExtractor, require("./routers/deletes.routes"))
 app.use(notFound)
 app.use(handleErrors)
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`server listening in ${PORT}`);
 })
+module.exports = {app,server}

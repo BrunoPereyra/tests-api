@@ -32,7 +32,7 @@ const makeStories = async (req, ress) => {
         const saveStory = await Story.save()
         users.storys = await users.storys.concat(saveStory._id)
         await users.save()
-        return ress.json({
+        return ress.status(200).json({
             ress: "story save"
         })
     } catch (error) {
