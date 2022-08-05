@@ -12,9 +12,10 @@ const Signup = async (req, ress) => {
     }
 
     if (userRepeat) {
-        ress.json({
+        return ress.status(200).json({
             ress: "user repeat"
         })
+        
     } else if (!userRepeat && password && nameUser && fullName) {
         const passwordHash = await bcrypt.hash(password, 10)
         const user = await new Users({
